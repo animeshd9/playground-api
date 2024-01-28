@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     },
     host: {
         type: Array,
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 })
 

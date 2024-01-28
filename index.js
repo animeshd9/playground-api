@@ -21,7 +21,6 @@ app.post('/signup', async ( req, res) => {
         res.status(200).json( {
             status:"Success",
             message: "You're on the queue. Please check your email for more details. Thank you",
-            data: item
           })
       
     } catch (e) {
@@ -30,7 +29,23 @@ app.post('/signup', async ( req, res) => {
 } )
 
 app.post('/status', async ( req, res) => {
-
+  try {
+    const user = await User.findOne({ "email": email, "active": true })
+    /**
+     * calculate the estimated time
+     */
+    if( user ) {
+      res.status(200).json({
+        status:"Success",
+        data: user
+      })
+    }
+    res.status(401).json( {
+      message: "Please sign up again",
+    })
+  } catch (error) {
+    
+  }
 })
 
 
