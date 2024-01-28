@@ -1,14 +1,12 @@
 const express = require('express')
 require('dotenv').config()
 const bodyParser = require('body-parser')
-const cors = require('cors')
 const { rabbitMQConnection } = require('./src/helpers/rabbitMq')
 const { User } = require('./src/models/users')
 const app = express()
 const mongoose = require('mongoose')
 const port = 3001 || process.env.port
 
-app.use(cors());
 app.use(bodyParser.json())
 
 
@@ -22,7 +20,8 @@ app.post('/signup', async ( req, res) => {
         await rabbitMQConnection.sendMessage( 'playground_queue', item )
         res.status(200).json( {
             status:"Success",
-            message: "You're on the queue. Please check your email for more details. Thank you"
+            message: "You're on the queue. Please check your email for more details. Thank you",
+            data: item
           })
       
     } catch (e) {
@@ -30,7 +29,9 @@ app.post('/signup', async ( req, res) => {
     }
 } )
 
-app.post('/enter', async ( req, res) => {})
+app.post('/status', async ( req, res) => {
+
+})
 
 
 app.listen( port, async () => {

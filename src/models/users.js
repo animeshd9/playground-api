@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
         default: true
     },
     host: {
-        type: String,
+        type: Array,
     }
 })
 
