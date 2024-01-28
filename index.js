@@ -13,7 +13,8 @@ app.use(bodyParser.json())
 app.post('/signup', async ( req, res) => {
     try {
         const user = await User.findOne( { email: req.body.email }).sort({ createdAt: -1})
-        if( user && user.inQueue && user.haveContainer ) {
+        console.log( user )
+        if( user && user.inQueue ) {
             res.status(500).json( { status: "Conflict", message: "User already in the queue or already assigned a docker container" })
         }
         const item = await User.create(req.body)
@@ -31,10 +32,14 @@ app.post('/signup', async ( req, res) => {
 app.get('/status', async ( req, res) => {
   try {
     const { email } = req.query
+    console.log(email)
     const user = await User.findOne({ "email": email, "active": true })
+    console.log(user)
+
     /**
      * calculate the estimated time
      */
+
     if( user ) {
       res.status(200).json({
         status:"Success",
