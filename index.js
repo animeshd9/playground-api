@@ -12,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json())
 
 
-app.post('/singup', async ( req, res) => {
+app.post('/signup', async ( req, res) => {
     try {
         const user = await User.findOne( { email: req.body.email }).sort({ createdAt: -1})
         if( user && user.inQueue && user.haveContainer ) {
