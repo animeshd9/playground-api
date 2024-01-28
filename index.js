@@ -12,10 +12,14 @@ app.use(bodyParser.json())
 
 app.post('/signup', async ( req, res) => {
     try {
-        const user = await User.findOne( { email: req.body.email }).sort({ createdAt: -1})
+        const user = await User.findOne( { email: req.body.email }).sort({ createdAt: -1}).lean()
         console.log( user )
         if( user && user.inQueue ) {
-            return res.status(500).json( { status: "Conflict", message: "User already in the queue or already assigned a docker container" })
+          user.waitingTime = 5000
+          return res.status(200).json({
+            status:"Success",
+            data: user
+          })
         }
         const item = await User.create(req.body)
         await rabbitMQConnection.sendMessage( 'playground_queue', item )
@@ -34,7 +38,7 @@ app.get('/status', async ( req, res) => {
   try {
     const { email } = req.query
     console.log(email)
-    const user = await User.findOne({ "email": email, "active": true })
+    const user = await User.findOne({ "email": email, "active": true }).lean()
     console.log(user)
 
     /**
@@ -42,6 +46,7 @@ app.get('/status', async ( req, res) => {
      */
 
     if( user ) {
+      user.waitingTime = 5000
       return res.status(200).json({
         status:"Success",
         data: user
