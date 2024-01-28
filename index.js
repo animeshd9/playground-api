@@ -15,10 +15,11 @@ app.post('/signup', async ( req, res) => {
         const user = await User.findOne( { email: req.body.email }).sort({ createdAt: -1})
         console.log( user )
         if( user && user.inQueue ) {
-            res.status(500).json( { status: "Conflict", message: "User already in the queue or already assigned a docker container" })
+            return res.status(500).json( { status: "Conflict", message: "User already in the queue or already assigned a docker container" })
         }
         const item = await User.create(req.body)
         await rabbitMQConnection.sendMessage( 'playground_queue', item )
+
         res.status(200).json( {
             status:"Success",
             message: "You're on the queue. Please check your email for more details. Thank you",
@@ -41,7 +42,7 @@ app.get('/status', async ( req, res) => {
      */
 
     if( user ) {
-      res.status(200).json({
+      return res.status(200).json({
         status:"Success",
         data: user
       })
