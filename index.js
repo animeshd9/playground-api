@@ -14,7 +14,7 @@ app.use(bodyParser.json())
 
 app.post('/singup', async ( req, res) => {
     try {
-        const user = await User.findOne( { email: req.body.email })
+        const user = await User.findOne( { email: req.body.email }).sort({ createdAt: -1})
         if( user && user.inQueue && user.haveContainer ) {
             res.status(500).json( { status: "Conflict", message: "User already in the queue or already assigned a docker container" })
         }
