@@ -28,8 +28,9 @@ app.post('/signup', async ( req, res) => {
     }
 } )
 
-app.post('/status', async ( req, res) => {
+app.get('/status', async ( req, res) => {
   try {
+    const { email } = req.query
     const user = await User.findOne({ "email": email, "active": true })
     /**
      * calculate the estimated time
