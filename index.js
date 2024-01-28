@@ -52,7 +52,7 @@ app.get('/status', async ( req, res) => {
         data: user
       })
     }
-    res.status(401).json( {
+    res.status(200).json( {
       message: "Please sign up again",
     })
   } catch (error) {
